@@ -31,13 +31,11 @@ services:
         value: ""
 
   # React 18 Frontend
-  - type: web
+  - type: static_site
     name: sprintpilot-frontend
-    runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     rootDir: frontend
-    plan: free
     routes:
       - type: rewrite
         source: /*
