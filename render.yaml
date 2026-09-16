@@ -12,7 +12,7 @@ services:
     runtime: docker
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
-    plan: free
+    plan: starter
     region: oregon
     envVars:
       - key: SPRING_PROFILES_ACTIVE
