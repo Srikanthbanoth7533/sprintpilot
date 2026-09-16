@@ -31,8 +31,9 @@ services:
         value: ""
 
   # React 18 Frontend
-  - type: static_site
+  - type: web
     name: sprintpilot-frontend
+    env: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     rootDir: frontend
