@@ -1,0 +1,48 @@
+databases:
+  - name: sprintpilot-db
+    databaseName: sprintpilot_db
+    user: sprintpilot_user
+    plan: free
+    region: oregon
+
+services:
+  # Spring Boot 3 Backend
+  - type: web
+    name: sprintpilot-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    region: oregon
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: sprintpilot-db
+          property: connectionString
+      - key: APP_JWT_SECRET
+        generateValue: true
+      - key: APP_JWT_EXPIRATION_MS
+        value: 86400000
+      - key: APP_CORS_ALLOWED_ORIGINS
+        value: https://sprintpilot-frontend.onrender.com,http://localhost:5173,http://localhost:3000
+      - key: OPENAI_API_KEY
+        value: ""
+
+  # React 18 Frontend
+  - type: web
+    name: sprintpilot-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    rootDir: frontend
+    plan: free
+    region: oregon
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://sprintpilot-backend.onrender.com/api
